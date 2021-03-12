@@ -4,7 +4,7 @@ from logica import *
 if __name__ == '__main__':
 
     num1 = "10101.01"
-    num2 = "10102011"
+    num2 = "01011100"
     num3 = "11111111"
     num4 = "101.1010"
     num5 = "760"
@@ -15,5 +15,9 @@ if __name__ == '__main__':
     convertir_binario_h_o_d(num1)
     convertir_binario_h_o_d(num8)
     convertir_binario_h_o_d(num7)
+
+
+    print("codigo nrzi del numero binario: " + num2 + " empezando en alto")
+    print(obtener_codigo_nrzi(num2, "alto"))
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
