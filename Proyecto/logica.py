@@ -4,17 +4,18 @@ from transformar_sistemas_numericos import *
 
 
 def convertir_binario_h_o_d(binary_num):
-    print("numero ingresado: " + binary_num)
+    if len(binary_num) == 0:
+        return "error, debe ingresar un numero"
+    resultado = ""
+    resultado += "numero ingresado: " + binary_num + "\n"
     if not is_binary(binary_num):
-        print("el numero ingresado no es binario")
-        print()
-        return
-    decimal = binary_to_decimal(binary_num)
-    print("equivalente en decimal: " + decimal)
-    print("equivalente en octal: " + decimal_to_octal(decimal))
-    print("equivalente en hexadecimal: " + decimal_to_hexadecimal(decimal))
-    print()
+        return "el numero ingresado no es binario"
 
+    decimal = binary_to_decimal(binary_num)
+    resultado += "equivalente en decimal: " + decimal + "\n"
+    resultado += "equivalente en octal: " + decimal_to_octal(decimal) + "\n"
+    resultado += "equivalente en hexadecimal: " + decimal_to_hexadecimal(decimal) + "\n"
+    return resultado
 """
 
 funcion obtener_codigo_nrzi
@@ -24,6 +25,9 @@ recibe: un numero binario en tipo string y un parametro de inicio
 
 
 def obtener_codigo_nrzi(binary_num, empieza_en):
+
+    if is_binary(binary_num) == 0:
+        return "error: el numero ingresado no es binario"
 
     resultado = []
     resultado.append(empieza_en)

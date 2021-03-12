@@ -1,7 +1,10 @@
 from logica import *
+from interfaz import *
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
+
+
 
     num1 = "10101.01"
     num2 = "01011100"
@@ -12,12 +15,12 @@ if __name__ == '__main__':
     num7 = "15"
     num8 = "11110010011011100"
 
-    convertir_binario_h_o_d(num1)
-    convertir_binario_h_o_d(num8)
-    convertir_binario_h_o_d(num7)
+    print(convertir_binario_h_o_d(num1))
 
+    #print("codigo nrzi del numero binario: " + num2 + " empezando en alto")
+    #print(obtener_codigo_nrzi(num2, "alto"))
 
-    print("codigo nrzi del numero binario: " + num2 + " empezando en alto")
-    print(obtener_codigo_nrzi(num2, "alto"))
+    app = Application()
+
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

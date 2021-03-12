@@ -27,7 +27,7 @@
 def is_binary(value):
 
     if value.count(".") > 1:
-        return "El numero ingresado no es binario"
+        return 0
 
     for x in value:
         if x != "0" and x != "1" and x != ".":
@@ -51,7 +51,7 @@ def equivalente_hexadecimal(num):
     elif num == 10:
         return "A"
     else:
-        return num
+        return str(num)
 
 # Realiza el proceso de divisiones sucesivas a partir de un valor y el divisor
 
