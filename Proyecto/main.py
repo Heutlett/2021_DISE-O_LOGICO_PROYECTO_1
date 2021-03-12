@@ -10,15 +10,10 @@ if __name__ == '__main__':
     num5 = "760"
     num6 = "760.33"
     num7 = "15"
-    num8 = "124124"
+    num8 = "11110010011011100"
 
-    print(num1 + " B2 a decimal " + binary_to_decimal(num1))
-    print(num2 + " B2 a decimal " + binary_to_decimal(num2))
-    print(num3 + " B2 a decimal " + binary_to_decimal(num3))
-    print(num4 + " B2 a decimal " + binary_to_decimal(num4))
-    print(num5 + " B10 a octal " + decimal_to_octal(num5))
-    print(num6 + " B10 a octal " + decimal_to_octal(num6))
-    print(num7 + " B10 a hexadecimal " + decimal_to_hexadecimal(num7))
-    print(num8 + " B10 a hexadecimal " + decimal_to_hexadecimal(num8))
+    convertir_binario_h_o_d(num1)
+    convertir_binario_h_o_d(num8)
+    convertir_binario_h_o_d(num7)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
