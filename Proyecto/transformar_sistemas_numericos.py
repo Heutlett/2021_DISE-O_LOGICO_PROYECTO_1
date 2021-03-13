@@ -101,7 +101,7 @@ def binary_to_decimal(value):
             return str(binary_to_decimal_coma_aux(value))
         return str(binary_to_decimal_aux(value))
     else:
-        return "HA INGRESADO UN NUMERO QUE NO ES BINARIO"
+        return "Ha ingresado un número no binario."
 
 
 def binary_to_decimal_aux(value):
