@@ -162,7 +162,7 @@ def palabra_con_paridad(matriz):
             column += 1
         column = 0
 
-    return resultado
+    return "".join(resultado)
 
 
 def orden_de_titulo_columnas(lista_bits_paridad, tamano_final):
