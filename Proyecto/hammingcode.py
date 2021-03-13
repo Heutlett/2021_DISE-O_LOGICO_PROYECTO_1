@@ -165,6 +165,22 @@ def palabra_con_paridad(matriz):
     return resultado
 
 
+def orden_de_titulo_columnas(lista_bits_paridad, tamano_final):
+    resultado = []
+    for i in range(tamano_final):
+        resultado.append("")
+    p = 1
+    for i in lista_bits_paridad:
+        resultado[i-1] = "p" + str(p)
+        p += 1
+    d = 1
+    for i in range(tamano_final):
+        if resultado[i] == "":
+            resultado[i] = "d" + str(d)
+            d += 1
+
+    return resultado
+
 
 def print_matriz(matriz):
 
@@ -190,6 +206,8 @@ print("la cantidad de bits de paridad para " + num + " es " + str(calcula_cantid
 print("los bits de paridad para " + num3 + " deben estar en las posiciones " + str(listax))
 print("los bits de datos para " + num3 + " deben estar en las posiciones " + str(calcula_posiciones_bits_datos(listax, 11, num)))
 
+print("Primera fila de la tabla que tiene el orden")
+print(orden_de_titulo_columnas(listax, 11))
 matriz = llenar_matriz(num3)
 print_matriz(matriz)
 print("La palabra final con paridad es :" + str(palabra_con_paridad(matriz)))
