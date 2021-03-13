@@ -147,9 +147,24 @@ def llenar_matriz(binary_num):
     agregar_bits_datos_a_matriz(matriz, lista_bits_paridad, lista_bits_datos, tamano_final)
 
     calcular_valor_paridades(matriz)
-
-
     return matriz
+
+
+def palabra_con_paridad(matriz):
+    resultado = []
+    for i in range(len(matriz[0])):
+        resultado.append("x")
+    column = 0
+    for f in matriz:
+        for c in f:
+            if c != "-":
+                resultado[column] = c
+            column += 1
+        column = 0
+
+    return resultado
+
+
 
 def print_matriz(matriz):
 
@@ -175,4 +190,7 @@ print("la cantidad de bits de paridad para " + num + " es " + str(calcula_cantid
 print("los bits de paridad para " + num3 + " deben estar en las posiciones " + str(listax))
 print("los bits de datos para " + num3 + " deben estar en las posiciones " + str(calcula_posiciones_bits_datos(listax, 11, num)))
 
-print_matriz(llenar_matriz(num3))
+matriz = llenar_matriz(num3)
+print_matriz(matriz)
+print("La palabra final con paridad es :" + str(palabra_con_paridad(matriz)))
+
