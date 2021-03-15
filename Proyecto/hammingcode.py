@@ -1,5 +1,6 @@
 from transformar_sistemas_numericos import *
 
+
 def is_par(num):
     if num == 0:
         return 1
@@ -7,6 +8,7 @@ def is_par(num):
         return 1
     else:
         return 0
+
 
 """
 Cada bit de paridad se obtiene calculando la paridad de alguno de los bits de datos. La posición del bit de paridad
@@ -24,7 +26,7 @@ En la Posición 4 (2^2 = 4), los bits: 4, 5, 6, 7, 12, 13, 14, 15, 20, 21, 22, 2
 def regla_salta_comprueba(n, tamano_final):
     resultado = []
     comprueba = 1
-    salta = n-1
+    salta = n - 1
     while comprueba < tamano_final:
         comprueba = comprueba + salta
         for x in range(n):
@@ -33,6 +35,7 @@ def regla_salta_comprueba(n, tamano_final):
             comprueba += 1
         salta = n
     return resultado
+
 
 """
 1. Todos los bits cuya posición es potencia de dos se utilizan como bits de 
@@ -50,6 +53,7 @@ def calcula_posiciones_bits_paridad(tamano_final):
         num = 2 ** i
     return resultado
 
+
 """
 Calcula las posiciones donde se deben poner numeros para cada fila de bit de paridad, por ejemplo:
 [(3, '0'), (5, '1'), (6, '1'), (7, '0'), (9, '1'), (10, '0'), (11, '1')]
@@ -57,6 +61,7 @@ En la posicion 3 debe ir un 0
 En la posicion 5 debe ir un 1
 etc...
 """
+
 
 def obtener_lista_bits_datos(lista_pos_paridad, binary_num):
     resultado = []
@@ -76,25 +81,28 @@ def calcula_posiciones_bits_datos(lista_pos_paridad):
     i = 0
     while pos <= 17:
         if pos not in lista_pos_paridad:
-            resultado.append((pos))
+            resultado.append(pos)
             i += 1
         pos += 1
     return resultado
 
+
 def crea_matriz(filas, columnas):
-    matriz = []
+    matrix = []
     for i in range(filas):
-        matriz.append([])
+        matrix.append([])
         for j in range(columnas):
-            matriz[i].append("-")
-    return matriz
+            matrix[i].append("-")
+    return matrix
+
 
 def agregar_bits_paridad_a_matriz(matriz, lista_bits_paridad):
     i = 0
     for x in lista_bits_paridad:
-        matriz[i][x-1] = "x"
+        matriz[i][x - 1] = "x"
         i += 1
     return matriz
+
 
 """
 Recorre la lista de bits de paridad, obteniendo de ella la posicion de cada bit de paridad
@@ -118,17 +126,15 @@ def agregar_bits_datos_a_matriz(matriz, lista_bits_paridad, lista_bits_datos, ta
     for p in lista_bits_paridad:
         lista_posicion = regla_salta_comprueba(p, tamano_final)
         for x in lista_posicion:
-            if matriz[i][x-1] != "x":
+            if matriz[i][x - 1] != "x":
                 if (x, '0') in lista_bits_datos:
-                    matriz[i][x-1] = "0"
+                    matriz[i][x - 1] = "0"
                 elif (x, '1') in lista_bits_datos:
                     matriz[i][x - 1] = "1"
         i += 1
 
 
-
 def calcular_valor_paridades(matriz, paridad):
-
     if paridad == "par":
 
         for f in matriz:
@@ -146,7 +152,6 @@ def calcular_valor_paridades(matriz, paridad):
 
 
 def obtener_matriz_sin_bits_paridad_verificados(binary_num):
-
     cantidad_bits_paridad = 5
     tamano_final = 17
 
@@ -160,8 +165,8 @@ def obtener_matriz_sin_bits_paridad_verificados(binary_num):
 
     return matriz
 
-def obtener_matriz_tabla_1(binary_num, paridad):
 
+def obtener_matriz_tabla_1(binary_num, paridad):
     if len(binary_num) != 12:
         print("el numero ingresado debe ser de 12 bits")
         return 0
@@ -187,50 +192,42 @@ def agregar_bits_paridad(binary_num_with_error, matriz, paridad):
     i = 0
     analisis_filas = []
 
-    if paridad == "par":
-        for x in posiciones_bits_paridad:
+    for x in posiciones_bits_paridad:
 
-            if is_par(matriz[i].count("1")):
-                if binary_num_with_error[x - 1] == "1":
+        if is_par(matriz[i].count("1")):
+            if binary_num_with_error[x - 1] == "1":
+                if paridad == "par":
                     analisis_filas.append("1")
                 else:
                     analisis_filas.append("0")
             else:
-                if binary_num_with_error[x - 1] == "0":
-                    analisis_filas.append("1")
-                else:
-                    analisis_filas.append("0")
-
-            matriz[i][x - 1] = binary_num_with_error[x - 1]
-            i += 1
-    else:
-        for x in posiciones_bits_paridad:
-
-            if is_par(matriz[i].count("1")):
-                if binary_num_with_error[x-1] == "1":
+                if paridad == "par":
                     analisis_filas.append("0")
                 else:
                     analisis_filas.append("1")
+        else:
+            if binary_num_with_error[x - 1] == "0":
+                if paridad == "par":
+                    analisis_filas.append("1")
+                else:
+                    analisis_filas.append("0")
             else:
-                if binary_num_with_error[x-1] == "0":
+                if paridad == "par":
                     analisis_filas.append("0")
                 else:
                     analisis_filas.append("1")
 
-            matriz[i][x-1] = binary_num_with_error[x-1]
-            i += 1
+        matriz[i][x - 1] = binary_num_with_error[x - 1]
+        i += 1
 
     return analisis_filas
 
 
 def calcular_posicion_error(lista_analisis):
-
     return binary_to_decimal("".join(lista_analisis))
 
 
-
 def verificar_errores_tabla_2(binary_num_with_error, paridad):
-
     if len(binary_num_with_error) != 17:
         print("el numero ingresado debe ser de 17 bits, 5:paridad, 12:datos")
         return 0
@@ -264,26 +261,13 @@ def palabra_con_paridad(matriz):
 
 
 def print_matriz(matriz):
-
     for fila in matriz:
         for valor in fila:
             print("\t", valor, end=" ")
         print()
 
-print("Regla donde colocar bits datos para bit de paridad en pos 1 " + str(regla_salta_comprueba(1, 11)))
-print("Regla donde colocar bits datos para bit de paridad en pos 2 " + str(regla_salta_comprueba(2, 11)))
-print("Regla donde colocar bits datos para bit de paridad en pos 4 " + str(regla_salta_comprueba(4, 11)))
-print("Regla donde colocar bits datos para bit de paridad en pos 8 " + str(regla_salta_comprueba(8, 11)))
 
-
-num = "0110101"
-num2 = "0110101"
 num3 = "011010101010"
-
-listax = calcula_posiciones_bits_paridad(17)
-
-print("los bits de paridad para " + num3 + " deben estar en las posiciones " + str(listax))
-print("los bits de datos para " + num3 + " deben estar en las posiciones " + str(obtener_lista_bits_datos(listax, num3)))
 
 print("Tabla 1 resultante del numero de entrada: " + num3)
 matriz = obtener_matriz_tabla_1(num3, "par")
