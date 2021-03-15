@@ -1,0 +1,20 @@
+Consulta proyecto diseño:
+
+Como es posible hacer el codigo hamming con un numero binario de 12 bits
+si para calcular la cantidad y la posicion de los bits de paridad se siguen las siguientes reglas:
+
+El código de Hamming agrega tres bits adicionales de comprobación por cada cuatro bits de datos del mensaje. 
+
+12/4 = 3 * 3 = 9 + 1 = 10
+
+Ocuparia 10 bits de paridad y 12 bits de datos.
+Es decir un total de 22 bits.
+
+
+1. Todos los bits cuya posición es potencia de dos se utilizan como bits de paridad (posiciones 1, 2, 4, 8, 16, 32, 64, etc.). 
+[1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
+
+Entonces si ocupamos 10 bits de paridad y solo tenemos 22 bits de espacio, con el bit de paridad numero 6-> posicion 32, ya nos estariamos saliendo del rango de espacio final.
+
+De hecho, para llegar al bit de paridad 10, este se ocuparian 512 columnas
+
