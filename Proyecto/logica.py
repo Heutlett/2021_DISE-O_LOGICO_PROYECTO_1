@@ -31,6 +31,7 @@ def obtener_codigo_nrzi(binary_num, empieza_en):
 
     resultado = []
     estado = empieza_en
+    resultado.append(estado)
 
     for x in binary_num:
         if x == "1":
@@ -43,3 +44,6 @@ def obtener_codigo_nrzi(binary_num, empieza_en):
             resultado.append(estado)
 
     return resultado
+
+
+print(obtener_codigo_nrzi("1000", "bajo"))

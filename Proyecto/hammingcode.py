@@ -242,6 +242,8 @@ def verificar_errores_tabla_2(binary_num_with_error, paridad):
 
     error = calcular_posicion_error(resultado_analisis[::-1])
 
+    return matriz
+
     print("El error se encuentra en el bit: " + str(error))
 
 

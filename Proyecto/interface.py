@@ -198,10 +198,11 @@ def setTable2Number(num):
 
 
 def fillTable2():
-    num = '11001100101010101'
+    num = "11001100101010101"
     # num = numberEntry.get()  # Obtener el número.
-    matrix = obtener_matriz_sin_bits_paridad_verificados(num)
-
+    #matrix = obtener_matriz_sin_bits_paridad_verificados(num)
+    matrix = verificar_errores_tabla_2(num, "par")
+    #print_matriz(matrix1)
     for r in range(len(description2) - 1):
         # del 0 al 17
         for c in range(len(headers2) - 3):
