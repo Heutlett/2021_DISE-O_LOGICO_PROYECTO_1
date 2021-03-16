@@ -1,17 +1,21 @@
-import os
+import sys
 from tkinter import *
 from tkinter import messagebox
-
 from hammingcode import *
 from logica import *
 from settings import *
 
 
 ##Funciones
+def close(event):
+    # root.withdraw() # if you want to bring it back
+    sys.exit()  # if you want to exit the entire thing
+
+
 # Funcion para detectar enter en el entry.
-def onEnter(event):
+def onEnter(event=None):
     mostrar_conversiones()
-    mostrar_codigo_nrzi()
+    mostrar_codigo_nrzi(nzriCanvas)
 
 
 # Funcion para detectar click en el toggle button y para cambiar paridad.
@@ -30,23 +34,44 @@ def switch(event):
         # print("PARIDAD :" + parity)
 
 
-def mostrar_codigo_nrzi():
+def mostrar_codigo_nrzi(canvas):
     num = numberEntry.get()
-
     if is_binary(num) == 0:
-        nrziVar.set("")
+        canvas.delete("all")
         return
 
     codigo = obtener_codigo_nrzi(num, "bajo")
     resultado = ""
     print(resultado)
 
-    for x in codigo:
-        if x == "alto":
-            resultado += "|¯"
-        else:
-            resultado += "|_"  # ㇄
-    nrziVar.set(resultado)
+    x = 1
+    y = 145
+    sumx = 50
+    resty = 115
+
+    last = 'bajo'
+    for b in codigo:
+        print(b)
+        if b == 'alto':  # ¯|
+            if last != b:
+                canvas.create_line(x, y - resty, x + sumx, y - resty, fill='black', width=2)
+                canvas.create_line(x, y, x, y - resty, fill="black", width=2)
+            else:
+                canvas.create_line(x, y - resty, x + sumx, y - resty, fill="black", width=2)
+                canvas.create_line(x, 10, x, 170, fill='red', width=2, dash=(5, 5))
+            last = 'alto'
+
+        else:  # ㇄
+            if last != b:  # si es bajo
+                canvas.create_line(x, y, x + sumx, y, fill=white, width=3)
+                canvas.create_line(x, y, x, y - resty, fill=white, width=3)
+            else:
+                canvas.create_line(x, y, x + sumx, y, fill=white, width=3)
+                canvas.create_line(x, 10, x, 170, fill='red', width=2, dash=(5, 5))
+            last = 'bajo'
+        x += sumx
+    canvas.config(width=x + 1)
+    canvas.create_line(0, canvas.winfo_height() / 2, x + 1, canvas.winfo_height() / 2, fill="black", width=3)
 
 
 def mostrar_conversiones():
@@ -54,7 +79,7 @@ def mostrar_conversiones():
 
 
 # Tabla 1.
-def createTable(columnsNames, rowsNames, canvas):
+def createTable1(columnsNames, rowsNames, canvas):
     cols = []
     # Headers
     for c in range(len(columnsNames)):
@@ -66,10 +91,11 @@ def createTable(columnsNames, rowsNames, canvas):
             cell.grid(pady=(0, 1))
         cols.append(cell)
     rows1.append(cols)
+
     # Descriptions
     for r in range(len(rowsNames)):
         cols = []
-        cell = Label(canvas, font=(font, 11, 'bold'), text=rowsNames[r], width=27, relief="flat", bg=white,
+        cell = Label(canvas, font=(font, 11, 'bold'), text=rowsNames[r], width=11, relief="flat", bg=white,
                      justify='center')
         cell.grid(row=r + 1, column=0, sticky=NSEW, padx=(1, 0), pady=(0, 1))
         if r == 0 or r == (len(rowsNames) - 1):
@@ -92,6 +118,7 @@ def createTable(columnsNames, rowsNames, canvas):
 
 # Fill table1
 def fillTable1():
+    onEnter()
     num = numberEntry.get()  # Obtener el número.
     matrix = obtener_matriz_tabla_1(num, parity)  # Obtener matriz.
     if not matrix:
@@ -114,24 +141,81 @@ def fillTable1():
             elif (r - 1) in (0, 1, 2, 3, 4):
                 # print (matrix[r-2])
                 rows1[r + 1][c + 1].config(text=matrix[r - 1][c])
+    setTable2Number(result)
 
 
-# matrix
-# R =  0 a 4.
-# C = 0 a 15.
+# Tabla 2.
+def createTable2(columnsNames, rowsNames, canvas):
+    cols = []
+    # Headers
+    for c in range(len(columnsNames)):
+        cell = Label(canvas, font=(font, 11, 'bold'), text=columnsNames[c], width=3, relief="flat", bg=white,
+                     justify='center')
+        cell.grid(row=0, column=c, sticky=NSEW, padx=(0, 1), pady=(1, 1))
+        if c == 0:
+            cell.config(bg=bodyColor)
+            cell.grid(pady=(0, 1))
+        elif c == (len(columnsNames) - 2):
+            cell.config(width=6)
 
-# Deberia ir
-# R = 0 a 6 debe ir de 0 a 6
-# C = 0 15 pero es 1 a 16
+    # Descriptions
+    for r in range(len(rowsNames)):
+        cols = []
+        cell = Label(canvas, font=(font, 11, 'bold'), text=rowsNames[r], width=8, relief="flat", bg=white,
+                     justify='center')
+        cell.grid(row=r + 1, column=0, sticky=NSEW, padx=(1, 0), pady=(0, 1))
+        if r == 0:
+            cell.config(bg=tablesColor)
+
+    # Data
+    for r in range(len(rowsNames)):
+        cols = []
+        for c in range(len(columnsNames) - 1):
+            if r == 0 and c != (len(columnsNames) - 2):
+                cell = Entry(canvas, font=(font, 11), width=3, relief="flat", bg=white, justify='center')
+                cell.grid(row=r + 1, column=c + 1, sticky=NSEW, padx=(1, 0), pady=(0, 1))
+                cell.config(bg=tablesColor)
+                entrysList.append(cell)
+            else:
+                cell = Label(canvas, font=(font, 11), width=3, relief="flat", bg=white, justify='center')
+                cell.grid(row=r + 1, column=c + 1, sticky=NSEW, padx=(1, 0), pady=(0, 1))
+                if c in (0, 1, 3, 7, 15):
+                    cell.config(font=(font, 11, 'bold'))
+                elif r == 0:
+                    cell.config(bg=tablesColor)
+                cols.append(cell)
+        if r != 0:
+            rows2.append(cols)
+
+
+def setTable2Number(num):
+    index = 0
+    for e in range(len(entrysList) - 1):
+        data = num[index]
+        entrysList[e].delete(0, END)
+        entrysList[e].insert(0, data)
+        index += 1
+
+
+def fillTable2():
+    num = '11001100101010101'
+    # num = numberEntry.get()  # Obtener el número.
+    matrix = obtener_matriz_sin_bits_paridad_verificados(num)
+
+    for r in range(len(description2) - 1):
+        # del 0 al 17
+        for c in range(len(headers2) - 3):
+            rows2[r][c].config(text=matrix[r][c])
 
 
 # Window
 root = Tk()
-root.title("Hamming Code")
-# root.geometry("1315x780+103+15")
+root.title("Proyecto 1 - Diseño Lógico")
 root.overrideredirect(False)
-# root.resizable(False, False)
+root.resizable(False, False)
 root.configure(background='black')
+root.bind('<Escape>', close)
+
 
 # Header Canvas
 headerCanvas = Canvas(root, bg=headerColor, highlightthickness=0)
@@ -151,6 +235,10 @@ numberEntry.bind("<Return>", onEnter)
 hammingImg = PhotoImage(file="resources/hamming.png")
 hammingButton = Button(headerCanvas, image=hammingImg, command=fillTable1, bg=headerColor, activebackground=headerColor,
                        relief='flat', borderwidth=0)
+# Button para llamar verificar
+errorImg = PhotoImage(file="resources/error.png")
+errorButton = Button(headerCanvas, image=errorImg, command=fillTable2, bg=headerColor, activebackground=headerColor,
+                     relief='flat', borderwidth=0)
 
 # Toggle Button
 switchbtn0 = PhotoImage(file="resources/toggle_on.png")
@@ -173,9 +261,7 @@ cnvLabel = Label(groundFrame, textvariable=cnvVar, justify=LEFT, anchor="nw",
                  bg=groundFrameColor, fg=white, font=(font, 13), height=5)
 
 # Conversion Widgets
-nrziVar = StringVar("")
-nzriLabel = Label(groundFrame, textvariable=nrziVar, bg=groundFrameColor, fg=white,
-                  font=(font, 22, 'bold'))
+nzriCanvas = Canvas(groundFrame, bg=tablesColor, height=175)
 
 # tables
 l1 = Label(bodyCanvas, text="Tabla 1. Cálculo de los bits de paridad en el código Hamming.", bg=bodyColor,
@@ -184,24 +270,28 @@ l2 = Label(bodyCanvas, text="Tabla 2. Comprobación de los bits de paridad.", bg
 
 c1 = Frame(bodyCanvas, bg=tablesColor, width=600, height=300)
 c2 = Frame(bodyCanvas, bg=tablesColor, width=600, height=300)
+verifyLabel = Label(c2, text=verifyTxt, bg=tablesColor, fg='black', font=(font, 11))
 
 # Create table
-createTable(headers1, description1, c1)
+createTable1(headers1, description1, c1)
+createTable2(headers2, description2, c2)
 
 # Shoving on screen.
 headerCanvas.grid(row=0, column=0, sticky='NSEW', columnspan=5, rowspan=2)
 bodyCanvas.grid(row=2, column=0, sticky='NSEW', columnspan=5, rowspan=5)
 headerLabel.grid(row=0, column=0, columnspan=1, padx=5, sticky='EW')
 numberEntry.grid(row=0, column=1, columnspan=1, padx=5, pady=25)
-hammingButton.grid(row=0, column=3, sticky='NSEW', padx=40, pady=5)
-switchLabel.grid(row=0, column=5, pady=(0, 5), sticky='S')
-toggleText.grid(row=0, column=5, pady=(10, 0), sticky='N')
+hammingButton.grid(row=0, column=3, sticky='NSEW', padx=(100, 5), pady=5)
+errorButton.grid(row=0, column=4, sticky='NSEW', padx=(5, 600), pady=5)
+switchLabel.grid(row=0, column=5, pady=(0, 2), sticky='S')
+toggleText.grid(row=0, column=5, pady=(7, 0), sticky='N')
 groundFrame.grid(row=2, column=0, rowspan=2, columnspan=6, padx=5, pady=5, sticky='NSEW')
 cnvLabel.grid(row=0, column=0, columnspan=2, rowspan=2, padx=15, pady=15, sticky='NSEW')
-nzriLabel.grid(row=0, column=2, columnspan=2, rowspan=2, padx=15, pady=15, sticky='NSEW')
+nzriCanvas.grid(row=0, column=2, columnspan=2, rowspan=2, padx=15, pady=15, sticky='NSEW')
 l1.grid(row=4, column=0, columnspan=3, padx=10, pady=10, ipady=5)
 l2.grid(row=4, column=3, columnspan=3)
-c1.grid(row=5, column=0, rowspan=3, columnspan=3, padx=10, pady=5, sticky='N')
-c2.grid(row=5, column=3, rowspan=3, columnspan=3, padx=10, pady=5, sticky='N')
+c1.grid(row=5, column=0, rowspan=3, columnspan=3, padx=(12, 5), pady=(0, 15), sticky='N')
+c2.grid(row=5, column=3, rowspan=3, columnspan=3, padx=(5, 12), pady=(0, 15), sticky='N')
+verifyLabel.grid(row=7, column=0, columnspan=19, padx=5, sticky='W')
 
 root.mainloop()
