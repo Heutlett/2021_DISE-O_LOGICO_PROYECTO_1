@@ -92,7 +92,7 @@ def crea_matriz(filas, columnas):
     for i in range(filas):
         matrix.append([])
         for j in range(columnas):
-            matrix[i].append("-")
+            matrix[i].append(" ")
     return matrix
 
 
@@ -169,7 +169,7 @@ def obtener_matriz_sin_bits_paridad_verificados(binary_num):
 def obtener_matriz_tabla_1(binary_num, paridad):
     if len(binary_num) != 12:
         print("el numero ingresado debe ser de 12 bits")
-        return 0
+        return False
 
     matriz = obtener_matriz_sin_bits_paridad_verificados(binary_num)
     calcular_valor_paridades(matriz, paridad)
@@ -252,7 +252,7 @@ def palabra_con_paridad(matriz):
     column = 0
     for f in matriz:
         for c in f:
-            if c != "-":
+            if c != " ":
                 resultado[column] = c
             column += 1
         column = 0
@@ -267,14 +267,16 @@ def print_matriz(matriz):
         print()
 
 
-num3 = "011010101010"
-
-print("Tabla 1 resultante del numero de entrada: " + num3)
-matriz = obtener_matriz_tabla_1(num3, "par")
-print_matriz(matriz)
-print("La palabra final con paridad es: " + str(palabra_con_paridad(matriz)))
-
-num4 = "11001100101010101"
-
-print("Verificando error en el numero:  " + num4)
-verificar_errores_tabla_2(num4, "par")
+# num3 = "011010101010"
+#
+# print("Tabla 1 resultante del numero de entrada: " + num3)
+#
+#
+# matriz = obtener_matriz_tabla_1(num3, "par")
+# print_matriz(matriz)
+# print("La palabra final con paridad es: " + str(palabra_con_paridad(matriz)))
+#
+# num4 = "11001100101010101"
+#
+# print("Verificando error en el numero:  " + num4)
+# verificar_errores_tabla_2(num4, "par")

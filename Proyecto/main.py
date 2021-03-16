@@ -1,5 +1,5 @@
 from logica import *
-from interfaz import *
+from interface import *
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -20,4 +20,4 @@ if __name__ == '__main__':
     #print("codigo nrzi del numero binario: " + num2 + " empezando en alto")
     #print(obtener_codigo_nrzi(num2, "alto"))
 
-    #app = Application()
+    # app = Application()
