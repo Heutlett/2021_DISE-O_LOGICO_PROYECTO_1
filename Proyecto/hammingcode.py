@@ -267,16 +267,16 @@ def print_matriz(matriz):
         print()
 
 
-# num3 = "011010101010"
-#
-# print("Tabla 1 resultante del numero de entrada: " + num3)
-#
-#
-# matriz = obtener_matriz_tabla_1(num3, "par")
-# print_matriz(matriz)
-# print("La palabra final con paridad es: " + str(palabra_con_paridad(matriz)))
-#
-# num4 = "11001100101010101"
-#
-# print("Verificando error en el numero:  " + num4)
-# verificar_errores_tabla_2(num4, "par")
+num3 = "011010101010"
+
+print("Tabla 1 resultante del numero de entrada: " + num3)
+
+
+matriz = obtener_matriz_tabla_1(num3, "par")
+print_matriz(matriz)
+print("La palabra final con paridad es: " + str(palabra_con_paridad(matriz)))
+
+num4 = "11001100101010101"
+
+print("Verificando error en el numero:  " + num4)
+verificar_errores_tabla_2(num4, "par")
