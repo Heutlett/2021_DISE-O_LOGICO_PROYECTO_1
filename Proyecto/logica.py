@@ -30,18 +30,21 @@ def obtener_codigo_nrzi(binary_num, empieza_en):
         return "Error: El número ingresado no es binario."
 
     resultado = []
-    resultado.append(empieza_en)
     estado = empieza_en
-    anterior = binary_num[0]
+    print(binary_num)
 
-    binary_num = binary_num[1:]
+    print(binary_num)
     for x in binary_num:
-        if anterior == x:
+        if x == "1":
+            if estado == "alto":
+                estado = "bajo"
+            else:
+                estado = "alto"
             resultado.append(estado)
-        elif anterior != x and estado == "bajo":
-            estado = "alto"
+        else:
             resultado.append(estado)
-        elif anterior != x and estado == "alto":
-            estado = "bajo"
-            resultado.append(estado)
+
     return resultado
+
+
+print(obtener_codigo_nrzi("011000110100", "bajo"))
