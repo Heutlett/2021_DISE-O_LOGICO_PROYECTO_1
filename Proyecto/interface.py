@@ -201,7 +201,9 @@ def fillTable2():
     num = "11001100101010101"
     # num = numberEntry.get()  # Obtener el número.
     #matrix = obtener_matriz_sin_bits_paridad_verificados(num)
-    matrix = verificar_errores_tabla_2(num, "par")
+    resultado = verificar_errores_tabla_2(num, "par")   #Esta funcion devuelve un par ordenado (matriz, pos bit error)
+    matrix = resultado[0]   #Almacena la matriz final
+    error = resultado[1]    #Almacena la posicion donde está el error
     #print_matriz(matrix1)
     for r in range(len(description2) - 1):
         # del 0 al 17

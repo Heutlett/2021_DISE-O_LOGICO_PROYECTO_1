@@ -242,9 +242,11 @@ def verificar_errores_tabla_2(binary_num_with_error, paridad):
 
     error = calcular_posicion_error(resultado_analisis[::-1])
 
-    return matriz
-
     print("El error se encuentra en el bit: " + str(error))
+
+    return (matriz, error)
+
+
 
 
 def palabra_con_paridad(matriz):
@@ -281,4 +283,5 @@ print("La palabra final con paridad es: " + str(palabra_con_paridad(matriz)))
 num4 = "11001100101010101"
 
 print("Verificando error en el numero:  " + num4)
-verificar_errores_tabla_2(num4, "par")
+result = verificar_errores_tabla_2(num4, "par")
+print(result)
