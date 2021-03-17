@@ -37,21 +37,21 @@ def switch(event):
 def mostrar_codigo_nrzi(canvas):
     num = numberEntry.get()
     if is_binary(num) == 0:
-        canvas.delete("all")
         return
+    canvas.delete("all")
 
     codigo = obtener_codigo_nrzi(num, "bajo")
     resultado = ""
     print(resultado)
 
     x = 1
-    y = 145
-    sumx = 50
-    resty = 115
+    y = 105
+    sumx = 30
+    resty = 85
 
     last = 'bajo'
     for b in codigo:
-        print(b)
+        # print(b)
         if b == 'alto':  # ¯|
             if last != b:
                 canvas.create_line(x, y - resty, x + sumx, y - resty, fill='black', width=2)
@@ -95,7 +95,7 @@ def createTable1(columnsNames, rowsNames, canvas):
     # Descriptions
     for r in range(len(rowsNames)):
         cols = []
-        cell = Label(canvas, font=(font, 11, 'bold'), text=rowsNames[r], width=11, relief="flat", bg=white,
+        cell = Label(canvas, font=(font, 11, 'bold'), text=rowsNames[r], width=27, relief="flat", bg=white,
                      justify='center')
         cell.grid(row=r + 1, column=0, sticky=NSEW, padx=(1, 0), pady=(0, 1))
         if r == 0 or r == (len(rowsNames) - 1):
@@ -142,6 +142,8 @@ def fillTable1():
                 # print (matrix[r-2])
                 rows1[r + 1][c + 1].config(text=matrix[r - 1][c])
     setTable2Number(result)
+    clearTable2()
+    verifyLabel.config(text=verifyTxt)
 
 
 # Tabla 2.
@@ -156,12 +158,14 @@ def createTable2(columnsNames, rowsNames, canvas):
             cell.config(bg=bodyColor)
             cell.grid(pady=(0, 1))
         elif c == (len(columnsNames) - 2):
-            cell.config(width=6)
+            cell.config(width=16)
+        elif c == (len(columnsNames) - 1):
+            cell.config(width=17)
 
     # Descriptions
     for r in range(len(rowsNames)):
         cols = []
-        cell = Label(canvas, font=(font, 11, 'bold'), text=rowsNames[r], width=8, relief="flat", bg=white,
+        cell = Label(canvas, font=(font, 11, 'bold'), text=rowsNames[r], width=15, relief="flat", bg=white,
                      justify='center')
         cell.grid(row=r + 1, column=0, sticky=NSEW, padx=(1, 0), pady=(0, 1))
         if r == 0:
@@ -174,7 +178,7 @@ def createTable2(columnsNames, rowsNames, canvas):
             if r == 0 and c != (len(columnsNames) - 2):
                 cell = Entry(canvas, font=(font, 11), width=3, relief="flat", bg=white, justify='center')
                 cell.grid(row=r + 1, column=c + 1, sticky=NSEW, padx=(1, 0), pady=(0, 1))
-                cell.config(bg=tablesColor)
+                cell.config(bg='red')
                 entrysList.append(cell)
             else:
                 cell = Label(canvas, font=(font, 11), width=3, relief="flat", bg=white, justify='center')
@@ -197,20 +201,68 @@ def setTable2Number(num):
         index += 1
 
 
+def clearTable2():
+    for r in range(len(description2) - 1):  # del 0 al 4
+        for c in range(len(headers2) - 1):  # del 0 al 18
+            rows2[r][c].config(text='')
+
+
+def getErrorNumTable2():
+    data = ""
+    for e in entrysList:
+        data += e.get()
+
+    if len(data) == 0:
+        return
+
+    tupleEntry = ()
+    if len(data) == 18:
+        if data[-1] == '1':
+            tupleEntry = (data[:-1], "impar")
+        elif data[-1] == '0':
+            tupleEntry = (data[:-1], "par")
+        else:
+            messagebox.showerror("Error!", "Solo puede ingresar 1 o 0.")
+            return
+    else:
+        messagebox.showerror("Error!", "Ingrese un valor de prueba para la paridad.")
+        return
+
+    return tupleEntry
+
+
 def fillTable2():
-    num = "11001100101010101"
-    # num = numberEntry.get()  # Obtener el número.
-    #matrix = obtener_matriz_sin_bits_paridad_verificados(num)
-    resultado = verificar_errores_tabla_2(num, "par")   #Esta funcion devuelve un par ordenado (matriz, pos bit error)
-    matrix = resultado[0]   #Almacena la matriz final
-    error = resultado[1]    #Almacena la posicion donde está el error
-    lista_bit_comprobacion = resultado[2]  #Lista en orden de los bits comparacion, elemento 0: bit comprobacion para bit de paridad 1
-    print("lista_bit_comprobacion " + str(lista_bit_comprobacion))
-    #print_matriz(matrix1)
-    for r in range(len(description2) - 1):
-        # del 0 al 17
-        for c in range(len(headers2) - 3):
+    # entryValues = getErrorNumTable2()  # Obtener el número.
+    entryValues = ('11001100101010101', "par")
+    if entryValues is None:
+        return
+
+    print("NUMERO : ", entryValues[0])
+    print("PRUEBA : ", entryValues[1])
+
+    num = entryValues[0]
+    paridad = entryValues[1]
+    pair = verificar_errores_tabla_2(num, paridad)  # Esta funcion devuelve un par ordenado (matriz, pos bit error)
+    matrix = pair[0]  # Almacena la matriz final
+    error = pair[1]  # Almacena la posicion donde está el error
+    bitsList = pair[2]  # Lista en orden de los bits comparacion, elemento 0: bit comprobacion para bit de paridad 1
+
+    print("Matrix : ", matrix)
+    print("Error : ", error)
+    print("Bits : ", str(bitsList))
+
+    # Rellena datos
+    for r in range(len(description2) - 1):  # del 0 al 4
+        for c in range(len(headers2) - 3):  # del 0 al 17
             rows2[r][c].config(text=matrix[r][c])
+
+    # Rellena bits
+    index = 0
+    for r in range(len(description2) - 1):
+        rows2[r][len(headers2) - 2].config(text=bitsList[index])
+        index += 1
+
+    verifyLabel.config(text=verifyTxt + str(error))
 
 
 # Window
@@ -220,7 +272,6 @@ root.overrideredirect(False)
 root.resizable(False, False)
 root.configure(background='black')
 root.bind('<Escape>', close)
-
 
 # Header Canvas
 headerCanvas = Canvas(root, bg=headerColor, highlightthickness=0)
@@ -263,18 +314,18 @@ groundFrame = Frame(bodyCanvas, bg=groundFrameColor, width=500, height=150)
 # Conversion Widgets
 cnvVar = StringVar("")
 cnvLabel = Label(groundFrame, textvariable=cnvVar, justify=LEFT, anchor="nw",
-                 bg=groundFrameColor, fg=white, font=(font, 13), height=5)
+                 bg=groundFrameColor, fg=white, font=(font, 13), height=5, width=-50)
 
 # Conversion Widgets
-nzriCanvas = Canvas(groundFrame, bg=tablesColor, height=175)
+nzriCanvas = Canvas(groundFrame, bg=tablesColor, height=125)
 
 # tables
 l1 = Label(bodyCanvas, text="Tabla 1. Cálculo de los bits de paridad en el código Hamming.", bg=bodyColor,
            font=(font, 13))
 l2 = Label(bodyCanvas, text="Tabla 2. Comprobación de los bits de paridad.", bg=bodyColor, font=(font, 13))
 
-c1 = Frame(bodyCanvas, bg=tablesColor, width=600, height=300)
-c2 = Frame(bodyCanvas, bg=tablesColor, width=600, height=300)
+c1 = Frame(bodyCanvas, bg=tablesColor, width=600, height=250)
+c2 = Frame(bodyCanvas, bg=tablesColor, width=600, height=250)
 verifyLabel = Label(c2, text=verifyTxt, bg=tablesColor, fg='black', font=(font, 11))
 
 # Create table
@@ -286,17 +337,18 @@ headerCanvas.grid(row=0, column=0, sticky='NSEW', columnspan=5, rowspan=2)
 bodyCanvas.grid(row=2, column=0, sticky='NSEW', columnspan=5, rowspan=5)
 headerLabel.grid(row=0, column=0, columnspan=1, padx=5, sticky='EW')
 numberEntry.grid(row=0, column=1, columnspan=1, padx=5, pady=25)
-hammingButton.grid(row=0, column=3, sticky='NSEW', padx=(100, 5), pady=5)
-errorButton.grid(row=0, column=4, sticky='NSEW', padx=(5, 600), pady=5)
-switchLabel.grid(row=0, column=5, pady=(0, 2), sticky='S')
-toggleText.grid(row=0, column=5, pady=(7, 0), sticky='N')
+hammingButton.grid(row=0, column=3, sticky='NSEW', padx=(20, 5), pady=5)
+errorButton.grid(row=0, column=4, sticky='NSEW', padx=(5, 280), pady=5)
+switchLabel.grid(row=0, column=5, pady=(0, 2), sticky='SW')
+toggleText.grid(row=0, column=5, pady=(7, 0), sticky='NW')
 groundFrame.grid(row=2, column=0, rowspan=2, columnspan=6, padx=5, pady=5, sticky='NSEW')
 cnvLabel.grid(row=0, column=0, columnspan=2, rowspan=2, padx=15, pady=15, sticky='NSEW')
-nzriCanvas.grid(row=0, column=2, columnspan=2, rowspan=2, padx=15, pady=15, sticky='NSEW')
-l1.grid(row=4, column=0, columnspan=3, padx=10, pady=10, ipady=5)
-l2.grid(row=4, column=3, columnspan=3)
-c1.grid(row=5, column=0, rowspan=3, columnspan=3, padx=(12, 5), pady=(0, 15), sticky='N')
-c2.grid(row=5, column=3, rowspan=3, columnspan=3, padx=(5, 12), pady=(0, 15), sticky='N')
+nzriCanvas.grid(row=0, column=2, columnspan=2, rowspan=2, padx=5, pady=5, sticky='NSEW')
+l1.grid(row=4, column=0, columnspan=6, padx=10, pady=(10, 0), ipady=5)
+l2.grid(row=8, column=0, columnspan=6, padx=10, pady=(10, 0), ipady=5)
+c1.grid(row=5, column=0, rowspan=3, columnspan=6, padx=(15, 15), pady=(0, 15), sticky='N')
+c2.grid(row=9, column=0, rowspan=3, columnspan=6, padx=(15, 15), pady=(0, 15), sticky='N')
 verifyLabel.grid(row=7, column=0, columnspan=19, padx=5, sticky='W')
+
 
 root.mainloop()
