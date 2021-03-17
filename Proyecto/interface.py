@@ -121,6 +121,7 @@ def createTable1(columnsNames, rowsNames, canvas):
 def fillTable1():
     onEnter()
     num = numberEntry.get()  # Obtener el número.
+    print("Entrada : ", num)
     matrix = obtener_matriz_tabla_1(num, parity)  # Obtener matriz.
     if not matrix:
         messagebox.showerror("Error!", "El número ingresado debe ser de 12 bits.")
@@ -180,6 +181,8 @@ def createTable2(columnsNames, rowsNames, canvas):
                 cell = Entry(canvas, font=(font, 11), width=3, relief="flat", bg=white, justify='center')
                 cell.grid(row=r + 1, column=c + 1, sticky=NSEW, padx=(1, 0), pady=(0, 1))
                 cell.config(bg='red')
+                if c == 17:
+                    cell.insert(0, '1')  # valor quemado de 1.
                 entrysList.append(cell)
             else:
                 cell = Label(canvas, font=(font, 11), width=3, relief="flat", bg=white, justify='center')
@@ -195,11 +198,15 @@ def createTable2(columnsNames, rowsNames, canvas):
 
 def setTable2Number(num):
     index = 0
+    # entrada=''
     for e in range(len(entrysList) - 1):
         data = num[index]
         entrysList[e].delete(0, END)
         entrysList[e].insert(0, data)
+        # entrada+=data
         index += 1
+
+    # print ("Salida  :  ", entrada)
 
 
 def clearTable2():
@@ -215,7 +222,8 @@ def getErrorNumTable2():
 
     if len(data) == 0:
         return
-
+    # print(data)
+    # print(data[:-1])
     tupleEntry = ()
     if len(data) == 18:
         if data[-1] == '1':
@@ -228,29 +236,29 @@ def getErrorNumTable2():
     else:
         messagebox.showerror("Error!", "Ingrese un valor de prueba para la paridad.")
         return
-
+    # print(tupleEntry[0], tupleEntry[1])
     return tupleEntry
 
 
 def fillTable2():
-    # entryValues = getErrorNumTable2()  # Obtener el número.
-    entryValues = ('11001100101010101', "par")
+    entryValues = getErrorNumTable2()  # Obtener el número.
+    # entryValues = ('11001100101010101', "par")
     if entryValues is None:
         return
-
-    print("NUMERO : ", entryValues[0])
-    print("PRUEBA : ", entryValues[1])
+    print("TEST    : ", '11001100101010101')
+    print("NUMERO  : ", entryValues[0])
+    print("PRUEBA  : ", entryValues[1])
 
     num = entryValues[0]
     paridad = entryValues[1]
-    pair = verificar_errores_tabla_2(num, paridad)  # Esta funcion devuelve un par ordenado (matriz, pos bit error)
+    pair = verificar_errores_tabla_2(num, 'par')  # Esta funcion devuelve un par ordenado (matriz, pos bit error)
     matrix = pair[0]  # Almacena la matriz final
     error = pair[1]  # Almacena la posicion donde está el error
     bitsList = pair[2]  # Lista en orden de los bits comparacion, elemento 0: bit comprobacion para bit de paridad 1
 
     print("Matrix : ", matrix)
-    print("Error : ", error)
-    print("Bits : ", str(bitsList))
+    # print("Error : ", error)
+    # print("Bits : ", str(bitsList))
 
     # Rellena datos
     for r in range(len(description2) - 1):  # del 0 al 4
@@ -260,10 +268,11 @@ def fillTable2():
     # Rellena bits
     index = 0
     for r in range(len(description2) - 1):
-        rows2[r][len(headers2) - 2].config(text=bitsList[index])
+        bit = bitsList[index]
+        rows2[r][len(headers2) - 2].config(text=bit)
+        rows2[r][len(headers2) - 3].config(text='Error') if (bit == '1') else rows2[r][len(headers2) - 3].config(text='Correct')
         index += 1
-
-    verifyLabel.config(text=verifyTxt + str(error))
+    verifyLabel.config(text='No hay error.') if (error=='0') else verifyLabel.config(text=verifyTxt + str(error))
 
 
 # Window
@@ -285,7 +294,7 @@ headerLabel = Label(headerCanvas, text=label1, bg=headerColor, fg=white, font=(f
 
 # Entry del numero.
 numberEntry = Entry(headerCanvas, width=20, font=(font, 14), relief="flat")
-numberEntry.insert(0, '101010101010')
+numberEntry.insert(0, '011010101010')
 numberEntry.bind("<Return>", onEnter)
 
 # Button para llamar a Hamming
@@ -355,6 +364,5 @@ l2.grid(row=8, column=0, columnspan=6, padx=10, pady=(0, 0), ipady=5)
 c1.grid(row=5, column=0, rowspan=3, columnspan=6, padx=(15, 15), pady=(0, 15), sticky='N')
 c2.grid(row=9, column=0, rowspan=3, columnspan=6, padx=(15, 15), pady=(0, 15), sticky='N')
 verifyLabel.grid(row=7, column=0, columnspan=19, padx=5, sticky='W')
-
 
 root.mainloop()
