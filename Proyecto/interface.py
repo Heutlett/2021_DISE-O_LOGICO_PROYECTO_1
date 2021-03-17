@@ -59,7 +59,7 @@ def mostrar_codigo_nrzi(canvas):
                 canvas.create_line(x, y, x, y - resty, fill="black", width=2)
             else:
                 canvas.create_line(x, y - resty, x + sumx, y - resty, fill="black", width=2)
-                canvas.create_line(x, partition[0], x, partition[1], fill='red', width=2, dash=(5, 5))
+                canvas.create_line(x, partition[0], x, partition[1], fill=splitLineColor, width=2, dash=(5, 5))
             last = 'alto'
 
         else:  # ㇄
@@ -68,7 +68,7 @@ def mostrar_codigo_nrzi(canvas):
                 canvas.create_line(x, y, x, y - resty, fill=white, width=3)
             else:
                 canvas.create_line(x, y, x + sumx, y, fill=white, width=3)
-                canvas.create_line(x, partition[0], x, partition[1], fill='red', width=2, dash=(5, 5))
+                canvas.create_line(x, partition[0], x, partition[1], fill=splitLineColor, width=2, dash=(5, 5))
             last = 'bajo'
         x += sumx
     canvas.config(width=x + 1)
@@ -81,76 +81,97 @@ def mostrar_conversiones():
 
 # Tabla 1.
 def createTable1(columnsNames, rowsNames, canvas):
-    cols = []
     # Headers
     for c in range(len(columnsNames)):
         cell = Label(canvas, font=(font, 11, 'bold'), text=columnsNames[c], width=3, relief="flat", bg=white,
                      justify='center')
-        cell.grid(row=0, column=c, sticky=NSEW, padx=(0, 1), pady=(1, 1))
+        cell.grid(row=0, column=c, sticky=NSEW, padx=(1, 0), pady=(1, 1))
         if c == 0:
             cell.config(bg=bodyColor)
-            cell.grid(pady=(0, 1))
-        cols.append(cell)
-    rows1.append(cols)
+            cell.grid(pady=(0, 1), padx=(0, 0))
 
     # Descriptions
     for r in range(len(rowsNames)):
-        cols = []
         cell = Label(canvas, font=(font, 11, 'bold'), text=rowsNames[r], width=27, relief="flat", bg=white,
                      justify='center')
         cell.grid(row=r + 1, column=0, sticky=NSEW, padx=(1, 0), pady=(0, 1))
         if r == 0 or r == (len(rowsNames) - 1):
             cell.config(bg=tablesColor)
-        cols.append(cell)
-        rows1.append(cols)
 
     # Data
-    for r in range(len(rowsNames)):
-        cols = rows1[r + 1]
+    # Row1
+    for c in range(len(columnsNames) - 1):
+        cell = Label(canvas, font=(font, 11), width=3, relief="flat", bg=splitLineColor, justify='center')
+        cell.grid(row=1, column=c + 1, sticky=NSEW, padx=(1, 0), pady=(0, 1))
+        row1Table1.append(cell)
+
+    # Row7
+    for c in range(len(columnsNames) - 1):
+        cell = Label(canvas, font=(font, 11), width=3, relief="flat", bg=tablesColor, justify='center')
+        cell.grid(row=len(rowsNames), column=c + 1, sticky=NSEW, padx=(1, 0), pady=(0, 1))
+        row7Table1.append(cell)
+        if c in (0, 1, 3, 7, 15):
+            cell.config(font=(font, 11, 'bold'))
+
+    # Row2al5 - Matrix data
+    for r in range(2, len(rowsNames)):  # del 2 al 6
+        cols = []
         for c in range(len(columnsNames) - 1):
             cell = Label(canvas, font=(font, 11), width=3, relief="flat", bg=white, justify='center')
-            cell.grid(row=r + 1, column=c + 1, sticky=NSEW, padx=(1, 0), pady=(0, 1))
-            if r == 0 or r == (len(rowsNames) - 1):
-                cell.config(bg=tablesColor)
+            cell.grid(row=r, column=c + 1, sticky=NSEW, padx=(1, 0), pady=(0, 1))
             if c in (0, 1, 3, 7, 15):
                 cell.config(font=(font, 11, 'bold'))
             cols.append(cell)
+        matrizData1.append(cols)
+    print(len(matrizData1))
+    print(len(matrizData1[0]))
 
 
 # Fill table1
 def fillTable1():
     onEnter()
-    num = numberEntry.get()  # Obtener el número.
-    print("Entrada : ", num)
-    matrix = obtener_matriz_tabla_1(num, parity)  # Obtener matriz.
+
+    num_without_parity = numberEntry.get()  # Obtener el número.
+    print("Entrada : ", num_without_parity)
+
+    matrix = obtener_matriz_tabla_1(num_without_parity, parity)  # Obtener matriz.
     if not matrix:
         messagebox.showerror("Error!", "El número ingresado debe ser de 12 bits.")
         return
-    result = str(palabra_con_paridad(matrix))  # Resultado con paridad.
 
-    index = 0
-    for r in range(1, len(description1), 1):
-        for c in range(len(headers1) - 1):
-            if r == 1 and not (c in (0, 1, 3, 7, 15)):
-                data = num[index]
-                index += 1
-                rows1[r][c + 1].config(text=data)
+    num_with_parity = str(palabra_con_paridad(matrix))  # Resultado con paridad.
 
-            if r == (len(description1) - 1):
-                data = result[c]
-                rows1[r + 1][c + 1].config(text=data)
+    # Llenar filas 1 y 7 y matriz
+    fillListWith(num_without_parity, row1Table1, (0, 1, 3, 7, 15))
+    fillListWith(num_with_parity, row7Table1)
+    fillMatrixWith(matrix, matrizData1)
 
-            elif (r - 1) in (0, 1, 2, 3, 4):
-                # print (matrix[r-2])
-                rows1[r + 1][c + 1].config(text=matrix[r - 1][c])
-    setTable2Number(result)
+    # Acomodar entry en tabla 2.
+    setTable2Number(num_with_parity)
     clearTable2()
     verifyLabel.config(text=verifyTxt)
 
 
+# Funcion para meter datos dentro de una lista. AMBOS del mismo tamaño.
+def fillListWith(data, lst, atIndex=None, index=0):
+    if atIndex is None:
+        for e in range(len(lst)):
+            lst[e].config(text=data[e])
+    else:
+        for i in range(len(lst)):
+            if not i in atIndex:
+                lst[i].config(text=data[index])
+                index += 1
+
+
+def fillMatrixWith(data, matrix):
+    for r in range(len(matrix)):  # 0 al 4 -> necesito ir del 1 al 5
+        for c in range(len(matrix[0])):
+            matrizData1[r][c].config(text=data[r][c])
+
+
 # Tabla 2.
 def createTable2(columnsNames, rowsNames, canvas):
-    cols = []
     # Headers
     for c in range(len(columnsNames)):
         cell = Label(canvas, font=(font, 11, 'bold'), text=columnsNames[c], width=3, relief="flat", bg=white,
@@ -166,7 +187,6 @@ def createTable2(columnsNames, rowsNames, canvas):
 
     # Descriptions
     for r in range(len(rowsNames)):
-        cols = []
         cell = Label(canvas, font=(font, 11, 'bold'), text=rowsNames[r], width=15, relief="flat", bg=white,
                      justify='center')
         cell.grid(row=r + 1, column=0, sticky=NSEW, padx=(1, 0), pady=(0, 1))
@@ -180,7 +200,7 @@ def createTable2(columnsNames, rowsNames, canvas):
             if r == 0 and c != (len(columnsNames) - 2):
                 cell = Entry(canvas, font=(font, 11), width=3, relief="flat", bg=white, justify='center')
                 cell.grid(row=r + 1, column=c + 1, sticky=NSEW, padx=(1, 0), pady=(0, 1))
-                cell.config(bg='red')
+                cell.config(bg=splitLineColor)
                 if c == 17:
                     cell.insert(0, '1')  # valor quemado de 1.
                 entrysList.append(cell)
@@ -193,7 +213,7 @@ def createTable2(columnsNames, rowsNames, canvas):
                     cell.config(bg=tablesColor)
                 cols.append(cell)
         if r != 0:
-            rows2.append(cols)
+            matrizData2.append(cols)
 
 
 def setTable2Number(num):
@@ -212,7 +232,7 @@ def setTable2Number(num):
 def clearTable2():
     for r in range(len(description2) - 1):  # del 0 al 4
         for c in range(len(headers2) - 1):  # del 0 al 18
-            rows2[r][c].config(text='')
+            matrizData2[r][c].config(text='')
 
 
 def getErrorNumTable2():
@@ -245,9 +265,9 @@ def fillTable2():
     # entryValues = ('11001100101010101', "par")
     if entryValues is None:
         return
-    print("TEST    : ", '11001100101010101')
-    print("NUMERO  : ", entryValues[0])
-    print("PRUEBA  : ", entryValues[1])
+    print("SALIDA  : ", entryValues[0])
+    print("TEST    : ", '11001101111111100')
+    # print("PRUEBA  : ", entryValues[1])
 
     num = entryValues[0]
     paridad = entryValues[1]
@@ -263,16 +283,17 @@ def fillTable2():
     # Rellena datos
     for r in range(len(description2) - 1):  # del 0 al 4
         for c in range(len(headers2) - 3):  # del 0 al 17
-            rows2[r][c].config(text=matrix[r][c])
+            matrizData2[r][c].config(text=matrix[r][c])
 
     # Rellena bits
     index = 0
     for r in range(len(description2) - 1):
         bit = bitsList[index]
-        rows2[r][len(headers2) - 2].config(text=bit)
-        rows2[r][len(headers2) - 3].config(text='Error') if (bit == '1') else rows2[r][len(headers2) - 3].config(text='Correct')
+        matrizData2[r][len(headers2) - 2].config(text=bit)
+        matrizData2[r][len(headers2) - 3].config(text='Error') if (bit == '1') else matrizData2[r][
+            len(headers2) - 3].config(text='Correct')
         index += 1
-    verifyLabel.config(text='No hay error.') if (error=='0') else verifyLabel.config(text=verifyTxt + str(error))
+    verifyLabel.config(text='No hay error.') if (error == '0') else verifyLabel.config(text=verifyTxt + str(error))
 
 
 # Window
@@ -294,7 +315,7 @@ headerLabel = Label(headerCanvas, text=label1, bg=headerColor, fg=white, font=(f
 
 # Entry del numero.
 numberEntry = Entry(headerCanvas, width=20, font=(font, 14), relief="flat")
-numberEntry.insert(0, '011010101010')
+numberEntry.insert(0, '011011111110')
 numberEntry.bind("<Return>", onEnter)
 
 # Button para llamar a Hamming
@@ -314,7 +335,8 @@ switchLabel.bind("<Button-1>", switch)
 
 # Toggle Label
 dirTxt = StringVar()
-dirTxt.set(parity)
+global parity
+dirTxt.set("Par" if parity == "par" else "Impar")
 toggleText = Label(headerCanvas, textvariable=dirTxt, justify=CENTER, anchor='center',
                    bg=headerColor, fg=white, font=(font, 10), width=8)
 
