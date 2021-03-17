@@ -53,6 +53,8 @@ def equivalente_hexadecimal(num):
     else:
         return str(num)
 
+
+
 # Realiza el proceso de divisiones sucesivas a partir de un valor y el divisor
 
 
@@ -64,12 +66,15 @@ def divisiones_sucesivas(value, divisor):
         return equivalente_hexadecimal(num)
 
     while num >= divisor:
-        if num%divisor < 10:
+        if num % divisor < 10:
             resultado += str(num % divisor)
-        elif num%divisor > 10 and divisor == 16:
-            resultado += equivalente_hexadecimal(num%divisor)
+        elif num % divisor >= 10 and divisor == 16:
+            resultado += equivalente_hexadecimal(num % divisor)
         num = num//divisor
-    resultado += str(num)
+    if divisor == 16:
+        resultado += equivalente_hexadecimal(num)
+    else:
+        resultado += str(num)
     return resultado[::-1]
 
 # Realiza el proceso de multiplicaciones sucesivas a partir de un valor y el multiplicador
@@ -170,3 +175,5 @@ def decimal_to_hexadecimal_coma_aux(value):
 
     return resultado
 
+print(binary_to_decimal("101010101010"))
+print(decimal_to_hexadecimal("2730"))

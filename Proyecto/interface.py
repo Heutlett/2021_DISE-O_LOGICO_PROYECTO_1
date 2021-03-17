@@ -204,6 +204,7 @@ def fillTable2():
     resultado = verificar_errores_tabla_2(num, "par")   #Esta funcion devuelve un par ordenado (matriz, pos bit error)
     matrix = resultado[0]   #Almacena la matriz final
     error = resultado[1]    #Almacena la posicion donde está el error
+    print("El error esta en la pos " + str(error))
     lista_bit_comprobacion = resultado[2]  #Lista en orden de los bits comparacion, elemento 0: bit comprobacion para bit de paridad 1
     print("lista_bit_comprobacion " + str(lista_bit_comprobacion))
     #print_matriz(matrix1)
