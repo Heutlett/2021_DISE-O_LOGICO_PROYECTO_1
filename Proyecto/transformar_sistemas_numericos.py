@@ -174,6 +174,3 @@ def decimal_to_hexadecimal_coma_aux(value):
     resultado += "." + str(multiplicaciones_sucesivas(value[indice_coma::], 16))
 
     return resultado
-
-print(binary_to_decimal("101010101010"))
-print(decimal_to_hexadecimal("2730"))
