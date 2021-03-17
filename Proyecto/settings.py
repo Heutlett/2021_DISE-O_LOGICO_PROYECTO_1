@@ -18,10 +18,11 @@ verifyTxt= 'El error se encuentra en el bit: '
 parity = 'Par'
 
 headers1 = (' ', 'p1', 'p2', 'd1', 'p3', 'd2', 'd3', 'd4', 'p4', 'd5', 'd6', 'd7', 'd8', 'd9', 'd10', 'd11', 'p5', 'd12')
-description1 = ["Sin paridad:", "p1", "p2", "p3", "p4", "p5", "Con paridad:"]
+description1 = ["Palabra de datos (sin paridad):", "p1", "p2", "p3", "p4", "p5", "Palabra de datos (con paridad):"]
 
-headers2 = (' ', 'p1', 'p2', 'd1', 'p3', 'd2', 'd3', 'd4', 'p4', 'd5', 'd6', 'd7', 'd8', 'd9', 'd10', 'd11', 'p5', 'd12', 'Prueba', 'Bit')
-description2 = ["Palabra:", "p1", "p2", "p3", "p4", "p5"]
+headers2 = (' ', 'p1', 'p2', 'd1', 'p3', 'd2', 'd3', 'd4', 'p4', 'd5', 'd6', 'd7', 'd8', 'd9', 'd10', 'd11', 'p5',
+            'd12', 'Prueba de paridad', 'Bits de comparación')
+description2 = ["Palabra de datos:", "p1", "p2", "p3", "p4", "p5"]
 
 rows1 = []
 rows2 = []
