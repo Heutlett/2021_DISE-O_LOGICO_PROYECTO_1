@@ -48,6 +48,7 @@ def mostrar_codigo_nrzi(canvas):
     y = 105
     sumx = 30
     resty = 85
+    partition = (10, 120)
 
     last = 'bajo'
     for b in codigo:
@@ -58,7 +59,7 @@ def mostrar_codigo_nrzi(canvas):
                 canvas.create_line(x, y, x, y - resty, fill="black", width=2)
             else:
                 canvas.create_line(x, y - resty, x + sumx, y - resty, fill="black", width=2)
-                canvas.create_line(x, 10, x, 170, fill='red', width=2, dash=(5, 5))
+                canvas.create_line(x, partition[0], x, partition[1], fill='red', width=2, dash=(5, 5))
             last = 'alto'
 
         else:  # ㇄
@@ -67,7 +68,7 @@ def mostrar_codigo_nrzi(canvas):
                 canvas.create_line(x, y, x, y - resty, fill=white, width=3)
             else:
                 canvas.create_line(x, y, x + sumx, y, fill=white, width=3)
-                canvas.create_line(x, 10, x, 170, fill='red', width=2, dash=(5, 5))
+                canvas.create_line(x, partition[0], x, partition[1], fill='red', width=2, dash=(5, 5))
             last = 'bajo'
         x += sumx
     canvas.config(width=x + 1)
@@ -335,17 +336,22 @@ createTable2(headers2, description2, c2)
 # Shoving on screen.
 headerCanvas.grid(row=0, column=0, sticky='NSEW', columnspan=5, rowspan=2)
 bodyCanvas.grid(row=2, column=0, sticky='NSEW', columnspan=5, rowspan=5)
-headerLabel.grid(row=0, column=0, columnspan=1, padx=5, sticky='EW')
+
+headerLabel.grid(row=0, column=0, columnspan=1, ipadx=10, sticky='EW')
 numberEntry.grid(row=0, column=1, columnspan=1, padx=5, pady=25)
+
 hammingButton.grid(row=0, column=3, sticky='NSEW', padx=(20, 5), pady=5)
 errorButton.grid(row=0, column=4, sticky='NSEW', padx=(5, 280), pady=5)
+
 switchLabel.grid(row=0, column=5, pady=(0, 2), sticky='SW')
 toggleText.grid(row=0, column=5, pady=(7, 0), sticky='NW')
+
 groundFrame.grid(row=2, column=0, rowspan=2, columnspan=6, padx=5, pady=5, sticky='NSEW')
-cnvLabel.grid(row=0, column=0, columnspan=2, rowspan=2, padx=15, pady=15, sticky='NSEW')
-nzriCanvas.grid(row=0, column=2, columnspan=2, rowspan=2, padx=5, pady=5, sticky='NSEW')
-l1.grid(row=4, column=0, columnspan=6, padx=10, pady=(10, 0), ipady=5)
-l2.grid(row=8, column=0, columnspan=6, padx=10, pady=(10, 0), ipady=5)
+cnvLabel.grid(row=0, column=2, columnspan=2, rowspan=2, padx=5, pady=10, sticky='NSEW')
+nzriCanvas.grid(row=0, column=0, columnspan=2, rowspan=2, padx=10, pady=10, sticky='NSEW')
+
+l1.grid(row=4, column=0, columnspan=6, padx=10, pady=(5, 0), ipady=5)
+l2.grid(row=8, column=0, columnspan=6, padx=10, pady=(0, 0), ipady=5)
 c1.grid(row=5, column=0, rowspan=3, columnspan=6, padx=(15, 15), pady=(0, 15), sticky='N')
 c2.grid(row=9, column=0, rowspan=3, columnspan=6, padx=(15, 15), pady=(0, 15), sticky='N')
 verifyLabel.grid(row=7, column=0, columnspan=19, padx=5, sticky='W')
