@@ -9,6 +9,8 @@ bodyColor = "#8ca5b4"
 groundFrameColor ='#173956'
 tablesColor ='lightgray'
 splitLineColor = 'pink'
+parColor = '#ff6961'
+imparColor = '#66c878'
 
 #Text
 font = "Century Gothic"

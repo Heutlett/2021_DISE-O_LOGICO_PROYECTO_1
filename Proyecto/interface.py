@@ -25,13 +25,17 @@ def switch(event):
         switchLabel.config(image=switchbtn0)
         dirTxt.set('Par')
         parity = 'par'
-        # print("PARIDAD :" + parity)
+        entrysList[17].delete(0, END)
+        entrysList[17].insert(0, '0')
+        entrysList[17].config(bg=parColor)
 
     else:
         switchLabel.config(image=switchbtn1)
         dirTxt.set('Impar')
         parity = 'impar'
-        # print("PARIDAD :" + parity)
+        entrysList[17].delete(0, END)
+        entrysList[17].insert(0, '1')
+        entrysList[17].config(bg=imparColor)
 
 
 def mostrar_codigo_nrzi(canvas):
@@ -41,8 +45,6 @@ def mostrar_codigo_nrzi(canvas):
     canvas.delete("all")
 
     codigo = obtener_codigo_nrzi(num, "bajo")
-    resultado = ""
-    print(resultado)
 
     x = 1
     y = 105
@@ -59,7 +61,7 @@ def mostrar_codigo_nrzi(canvas):
                 canvas.create_line(x, y, x, y - resty, fill="black", width=2)
             else:
                 canvas.create_line(x, y - resty, x + sumx, y - resty, fill="black", width=2)
-                canvas.create_line(x, partition[0], x, partition[1], fill=splitLineColor, width=2, dash=(5, 5))
+                canvas.create_line(x, partition[0], x, partition[1], fill='red', width=2, dash=(5, 5))
             last = 'alto'
 
         else:  # ㇄
@@ -68,7 +70,7 @@ def mostrar_codigo_nrzi(canvas):
                 canvas.create_line(x, y, x, y - resty, fill=white, width=3)
             else:
                 canvas.create_line(x, y, x + sumx, y, fill=white, width=3)
-                canvas.create_line(x, partition[0], x, partition[1], fill=splitLineColor, width=2, dash=(5, 5))
+                canvas.create_line(x, partition[0], x, partition[1], fill='red', width=2, dash=(5, 5))
             last = 'bajo'
         x += sumx
     canvas.config(width=x + 1)
@@ -123,8 +125,8 @@ def createTable1(columnsNames, rowsNames, canvas):
                 cell.config(font=(font, 11, 'bold'))
             cols.append(cell)
         matrizData1.append(cols)
-    print(len(matrizData1))
-    print(len(matrizData1[0]))
+    # print(len(matrizData1))
+    # print(len(matrizData1[0]))
 
 
 # Fill table1
@@ -132,7 +134,7 @@ def fillTable1():
     onEnter()
 
     num_without_parity = numberEntry.get()  # Obtener el número.
-    print("Entrada : ", num_without_parity)
+    # print("Entrada : ", num_without_parity)
 
     matrix = obtener_matriz_tabla_1(num_without_parity, parity)  # Obtener matriz.
     if not matrix:
@@ -202,7 +204,8 @@ def createTable2(columnsNames, rowsNames, canvas):
                 cell.grid(row=r + 1, column=c + 1, sticky=NSEW, padx=(1, 0), pady=(0, 1))
                 cell.config(bg=splitLineColor)
                 if c == 17:
-                    cell.insert(0, '1')  # valor quemado de 1.
+                    cell.insert(0, '0')  # valor quemado de 1.
+                    cell.config(bg=parColor)
                 entrysList.append(cell)
             else:
                 cell = Label(canvas, font=(font, 11), width=3, relief="flat", bg=white, justify='center')
@@ -270,9 +273,8 @@ def fillTable2():
     # print("PRUEBA  : ", entryValues[1])
 
     num = entryValues[0]
-    #paridad = entryValues[1]
-
-    pair = verificar_errores_tabla_2(num, parity)  # Esta funcion devuelve un par ordenado (matriz, pos bit error)
+    paridad = entryValues[1]
+    pair = verificar_errores_tabla_2(num, paridad)  # Esta funcion devuelve un par ordenado (matriz, pos bit error)
     matrix = pair[0]  # Almacena la matriz final
     error = pair[1]  # Almacena la posicion donde está el error
     bitsList = pair[2]  # Lista en orden de los bits comparacion, elemento 0: bit comprobacion para bit de paridad 1
@@ -291,8 +293,13 @@ def fillTable2():
     for r in range(len(description2) - 1):
         bit = bitsList[index]
         matrizData2[r][len(headers2) - 2].config(text=bit)
-        matrizData2[r][len(headers2) - 3].config(text='Error') if (bit == '1') else matrizData2[r][
-            len(headers2) - 3].config(text='Correct')
+
+        if paridad == 'par':
+            matrizData2[r][len(headers2) - 3].config(text='Error') if (bit == '1') else matrizData2[r][
+                len(headers2) - 3].config(text='Correct')
+        elif paridad == 'impar':
+            matrizData2[r][len(headers2) - 3].config(text='Correcto') if (bit == '1') else matrizData2[r][
+                len(headers2) - 3].config(text='Error')
         index += 1
     verifyLabel.config(text='No hay error.') if (error == '0') else verifyLabel.config(text=verifyTxt + str(error))
 
