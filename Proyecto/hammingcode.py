@@ -211,6 +211,7 @@ def agregar_bits_paridad(binary_num_with_error, matriz, paridad):
                     analisis_filas.append("1")
                 else:
                     analisis_filas.append("0")
+
             else:
                 if paridad == "par":
                     analisis_filas.append("0")
@@ -220,11 +221,58 @@ def agregar_bits_paridad(binary_num_with_error, matriz, paridad):
         matriz[i][x - 1] = binary_num_with_error[x - 1]
         i += 1
 
-    return analisis_filas
+    if paridad == "par":
+
+        return analisis_filas
+
+    else:
+        print("prueba prueba:")
+        print(analisis_filas)
+        print(analisis_filas[::-1])
+        return reemplazar_1_por_0_array(analisis_filas)
 
 
-def calcular_posicion_error(lista_analisis):
-    return binary_to_decimal("".join(lista_analisis))
+def reemplazar_1_por_0_array(num):
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAA")
+    print("prueba: " + str(num))
+    resultado = []
+    i = 0
+
+    for x in num:
+        if x == "0":
+            resultado.append("1")
+        else:
+            resultado.append("0")
+        i += 1
+    return resultado
+
+
+def reemplazar_1_por_0(num):
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAA")
+    print("prueba: " + str(num))
+    resultado = ""
+    i = 0
+
+    for x in num:
+        if x == "0":
+            resultado += "1"
+        else:
+            resultado += "0"
+        i += 1
+    print("resultado: " + resultado)
+    return resultado
+
+
+def calcular_posicion_error(lista_analisis, paridad):
+
+    print(paridad)
+
+    if paridad == "par":
+        print("XXXXXXXXXXXXXX")
+        return binary_to_decimal("".join(lista_analisis))
+    else:
+        print("aAASDASDA")
+        return binary_to_decimal(reemplazar_1_por_0("".join(lista_analisis)))
 
 
 def verificar_errores_tabla_2(binary_num_with_error, paridad):
@@ -239,8 +287,10 @@ def verificar_errores_tabla_2(binary_num_with_error, paridad):
     resultado_analisis = agregar_bits_paridad(binary_num_with_error, matriz, paridad)
 
     print_matriz(matriz)
+    print("PRUEBA RESULTADO ANALISIS")
+    print(resultado_analisis)
 
-    error = calcular_posicion_error(resultado_analisis[::-1])
+    error = calcular_posicion_error(resultado_analisis[::-1], paridad)
 
     # print("El error se encuentra en el bit: " + str(error))
 

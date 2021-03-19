@@ -270,8 +270,9 @@ def fillTable2():
     # print("PRUEBA  : ", entryValues[1])
 
     num = entryValues[0]
-    paridad = entryValues[1]
-    pair = verificar_errores_tabla_2(num, 'par')  # Esta funcion devuelve un par ordenado (matriz, pos bit error)
+    #paridad = entryValues[1]
+
+    pair = verificar_errores_tabla_2(num, parity)  # Esta funcion devuelve un par ordenado (matriz, pos bit error)
     matrix = pair[0]  # Almacena la matriz final
     error = pair[1]  # Almacena la posicion donde está el error
     bitsList = pair[2]  # Lista en orden de los bits comparacion, elemento 0: bit comprobacion para bit de paridad 1
