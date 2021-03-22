@@ -25,6 +25,7 @@ def switch(event):
         switchLabel.config(image=switchbtn0)
         dirTxt.set('Par')
         parity = 'par'
+        print("PAR")
         entrysList[17].delete(0, END)
         entrysList[17].insert(0, '0')
         entrysList[17].config(bg=parColor)
@@ -33,6 +34,7 @@ def switch(event):
         switchLabel.config(image=switchbtn1)
         dirTxt.set('Impar')
         parity = 'impar'
+        print("IMPAR")
         entrysList[17].delete(0, END)
         entrysList[17].insert(0, '1')
         entrysList[17].config(bg=imparColor)
@@ -279,9 +281,9 @@ def fillTable2():
     error = pair[1]  # Almacena la posicion donde está el error
     bitsList = pair[2]  # Lista en orden de los bits comparacion, elemento 0: bit comprobacion para bit de paridad 1
 
-    print("Matrix : ", matrix)
+    # print("Matrix : ", matrix)
     # print("Error : ", error)
-    # print("Bits : ", str(bitsList))
+    print("Bits : ", str(bitsList))
 
     # Rellena datos
     for r in range(len(description2) - 1):  # del 0 al 4
@@ -297,7 +299,13 @@ def fillTable2():
         if paridad == 'par':
             matrizData2[r][len(headers2) - 3].config(text='Error') if (bit == '1') else matrizData2[r][
                 len(headers2) - 3].config(text='Correct')
+
         elif paridad == 'impar':
+            if bit == '0':
+                matrizData2[r][len(headers2) - 2].config(text='1')
+            else:
+                matrizData2[r][len(headers2) - 2].config(text='0')
+
             matrizData2[r][len(headers2) - 3].config(text='Correcto') if (bit == '1') else matrizData2[r][
                 len(headers2) - 3].config(text='Error')
         index += 1
